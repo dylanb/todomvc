@@ -39,7 +39,7 @@
 					</span>
 					<ul id="filters">
 						<li>
-							<a ng-class="{selected: status == ''} " href="#/">All</a>
+							<a data-nga11y-focus ng-class="{selected: status == ''} " href="#/">All</a>
 						</li>
 						<li>
 							<a ng-class="{selected: status == 'active'}" href="#/active">Active</a>
@@ -70,5 +70,6 @@
 		<script src="js/services/todoStorage.js"></script>
 		<script src="js/directives/todoFocus.js"></script>
 		<script src="js/directives/todoEscape.js"></script>
+		<script src="bower_components/ng-a11y/dist/nga11yfocus.min.js"></script>
 	</body>
 </html>

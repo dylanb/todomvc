@@ -6,7 +6,7 @@
  * - exposes the model to the template and provides event handlers
  */
 angular.module('todomvc')
-	.controller('TodoCtrl', function TodoCtrl($scope, $routeParams, $filter, store) {
+	.controller('TodoCtrl', ['$scope', '$routeParams', '$filter', 'store', '$timeout', 'nga11yAnnounce', function TodoCtrl($scope, $routeParams, $filter, store, $timeout, nga11yAnnounce) {
 		'use strict';
 
 		var todos = $scope.todos = store.todos;
@@ -20,6 +20,14 @@ angular.module('todomvc')
 			$scope.allChecked = !$scope.remainingCount;
 		}, true);
 
+		$scope.$watch(function () {
+			return document.getElementById('todo-list');
+		}, function(list) {
+			$timeout(function () {
+				var lis = list.querySelectorAll('li');
+				nga11yAnnounce.assertiveAnnounce(lis.length + ' items being displayed');
+			},500);
+		});
 		// Monitor the current route for changes and adjust the filter accordingly.
 		$scope.$on('$routeChangeSuccess', function () {
 			var status = $scope.status = $routeParams.status || '';
@@ -122,4 +130,4 @@ angular.module('todomvc')
 				}
 			});
 		};
-	});
+	}]);

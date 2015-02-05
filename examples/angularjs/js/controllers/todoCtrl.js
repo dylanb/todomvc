@@ -13,6 +13,7 @@ angular.module('todomvc')
 
 		$scope.newTodo = '';
 		$scope.editedTodo = null;
+		$scope.lastEditedTodo = null;
 
 		$scope.$watch('todos', function () {
 			$scope.remainingCount = $filter('filter')(todos, { completed: false }).length;
@@ -32,6 +33,7 @@ angular.module('todomvc')
 		$scope.$on('$routeChangeSuccess', function () {
 			var status = $scope.status = $routeParams.status || '';
 
+			$scope.lastEditedTodo = null;
 			$scope.statusFilter = (status === 'active') ?
 				{ completed: false } : (status === 'completed') ?
 				{ completed: true } : null;
@@ -55,10 +57,12 @@ angular.module('todomvc')
 				.finally(function () {
 					$scope.saving = false;
 				});
+			$scope.lastEditedTodo = null;
 		};
 
 		$scope.editTodo = function (todo) {
 			$scope.editedTodo = todo;
+			$scope.lastEditedTodo = null;
 			// Clone the original todo to restore it on demand.
 			$scope.originalTodo = angular.extend({}, todo);
 		};
@@ -72,6 +76,7 @@ angular.module('todomvc')
 			}
 
 			$scope.saveEvent = event;
+			$scope.lastEditedTodo = todo;
 
 			if ($scope.reverted) {
 				// Todo edits were reverted-- don't save.
@@ -80,10 +85,6 @@ angular.module('todomvc')
 			}
 
 			todo.title = todo.title.trim();
-
-			if (todo.title === $scope.originalTodo.title) {
-				return;
-			}
 
 			store[todo.title ? 'put' : 'delete'](todo)
 				.then(function success() {}, function error() {
@@ -99,6 +100,7 @@ angular.module('todomvc')
 			$scope.editedTodo = null;
 			$scope.originalTodo = null;
 			$scope.reverted = true;
+			$scope.lastEditedTodo = todo;
 		};
 
 		$scope.removeTodo = function (todo) {

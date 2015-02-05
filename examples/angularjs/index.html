@@ -24,7 +24,7 @@
 						<li ng-repeat="todo in todos | filter:statusFilter track by $index" ng-class="{completed: todo.completed, editing: todo == editedTodo}">
 							<div class="view">
 								<input class="toggle" type="checkbox" ng-model="todo.completed" ng-change="toggleCompleted(todo)">
-								<label ng-dblclick="editTodo(todo)">{{todo.title}}</label>
+								<a role="button" class="todoitem" aria-describedby="clicktoedit" ng-click="editTodo(todo)" todo-focus="todo == lastEditedTodo">{{todo.title}}</a>
 								<button class="destroy" ng-click="removeTodo(todo)"></button>
 							</div>
 							<form ng-submit="saveEdits(todo, 'submit')">
@@ -52,7 +52,7 @@
 				</footer>
 			</section>
 			<footer id="info">
-				<p>Double-click to edit a todo</p>
+				<p id="clicktoedit">Click to edit a todo</p>
 				<p>Credits:
 					<a href="http://twitter.com/cburgdorf">Christoph Burgdorf</a>,
 					<a href="http://ericbidelman.com">Eric Bidelman</a>,
@@ -72,5 +72,6 @@
 		<script src="js/directives/todoEscape.js"></script>
 		<script src="bower_components/ng-a11y/dist/nga11yfocus.min.js"></script>
 		<script src="bower_components/ng-a11y/dist/nga11yannounce.min.js"></script>
+		<script src="bower_components/angular-aria/angular-aria.min.js"></script>
 	</body>
 </html>

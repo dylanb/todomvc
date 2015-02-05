@@ -14,6 +14,8 @@ angular.module('todomvc')
 			elem.bind('keydown', function (event) {
 				if (event.keyCode === ESCAPE_KEY) {
 					scope.$apply(attrs.todoEscape);
+					var par = elem.eq(0).parent().parent()[0];
+					par.querySelector('a').focus();
 				}
 			});
 		};

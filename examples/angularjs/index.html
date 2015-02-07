@@ -21,14 +21,14 @@
 					<input id="toggle-all" type="checkbox" ng-model="allChecked" ng-click="markAll(allChecked)">
 					<label for="toggle-all">Mark all as complete</label>
 					<ul id="todo-list">
-						<li ng-repeat="todo in todos | filter:statusFilter track by $index" ng-class="{completed: todo.completed, editing: todo == editedTodo}">
+						<li ng-repeat="todo in todos | filter:statusFilter track by $index" ng-class="{completed: todo.completed, editing: todo == editedTodo}" todo-kbd>
 							<div class="view">
 								<input class="toggle" type="checkbox" ng-model="todo.completed" ng-change="toggleCompleted(todo)">
-								<a role="button" class="todoitem" aria-describedby="clicktoedit" ng-click="editTodo(todo)" todo-focus="todo == lastEditedTodo">{{todo.title}}</a>
-								<button class="destroy" ng-click="removeTodo(todo)"></button>
+								<a role="button" class="todoitem" aria-describedby="clicktoedit" ng-click="editTodo(todo)" todo-focus="mustFocus(todo)">{{todo.title}}</a>
+								<button class="destroy" ng-click="removeTodo(todo)" aria-label="Delete"></button>
 							</div>
-							<form ng-submit="saveEdits(todo, 'submit')">
-								<input class="edit" ng-trim="false" ng-model="todo.title" todo-escape="revertEdits(todo)" ng-blur="saveEdits(todo, 'blur')" todo-focus="todo == editedTodo">
+							<form ng-submit="saveEdits(todo)">
+								<input class="edit" ng-trim="false" ng-model="todo.title" ng-blur="blurTodo(todo)" todo-focus="todo == editedTodo">
 							</form>
 						</li>
 					</ul>
@@ -69,7 +69,7 @@
 		<script src="js/controllers/todoCtrl.js"></script>
 		<script src="js/services/todoStorage.js"></script>
 		<script src="js/directives/todoFocus.js"></script>
-		<script src="js/directives/todoEscape.js"></script>
+		<script src="js/directives/todoKbd.js"></script>
 		<script src="bower_components/ng-a11y/dist/nga11yfocus.min.js"></script>
 		<script src="bower_components/ng-a11y/dist/nga11yannounce.min.js"></script>
 		<script src="bower_components/angular-aria/angular-aria.min.js"></script>

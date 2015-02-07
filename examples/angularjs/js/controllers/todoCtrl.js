@@ -13,7 +13,7 @@ angular.module('todomvc')
 
 		$scope.newTodo = '';
 		$scope.editedTodo = null;
-		$scope.lastEditedTodo = null;
+		$scope.focusTodo = null;
 
 		$scope.$watch('todos', function () {
 			$scope.remainingCount = $filter('filter')(todos, { completed: false }).length;
@@ -33,7 +33,7 @@ angular.module('todomvc')
 		$scope.$on('$routeChangeSuccess', function () {
 			var status = $scope.status = $routeParams.status || '';
 
-			$scope.lastEditedTodo = null;
+			$scope.focusTodo = null;
 			$scope.statusFilter = (status === 'active') ?
 				{ completed: false } : (status === 'completed') ?
 				{ completed: true } : null;
@@ -57,26 +57,18 @@ angular.module('todomvc')
 				.finally(function () {
 					$scope.saving = false;
 				});
-			$scope.lastEditedTodo = null;
+			$scope.focusTodo = null;
 		};
 
 		$scope.editTodo = function (todo) {
 			$scope.editedTodo = todo;
-			$scope.lastEditedTodo = null;
+			$scope.focusTodo = null;
 			// Clone the original todo to restore it on demand.
 			$scope.originalTodo = angular.extend({}, todo);
 		};
 
-		$scope.saveEdits = function (todo, event) {
-			// Blur events are automatically triggered after the form submit event.
-			// This does some unfortunate logic handling to prevent saving twice.
-			if (event === 'blur' && $scope.saveEvent === 'submit') {
-				$scope.saveEvent = null;
-				return;
-			}
-
-			$scope.saveEvent = event;
-			$scope.lastEditedTodo = todo;
+		$scope.saveEdits = function (todo) {
+			$scope.focusTodo = todo;
 
 			if ($scope.reverted) {
 				// Todo edits were reverted-- don't save.
@@ -100,15 +92,30 @@ angular.module('todomvc')
 			$scope.editedTodo = null;
 			$scope.originalTodo = null;
 			$scope.reverted = true;
-			$scope.lastEditedTodo = todo;
+			$scope.focusTodo = todo;
 		};
 
 		$scope.removeTodo = function (todo) {
+			// Make sure that the next (or previous) todo will inherit the focus
+			var index = todos.indexOf(todo);
+			if (index === todos.length - 1) {
+				$scope.focusTodo = todos[index - 1];
+			} else {
+				$scope.focusTodo = todos[index + 1];
+			}
+			// delete the todo
 			store.delete(todo);
 		};
 
 		$scope.saveTodo = function (todo) {
 			store.put(todo);
+		};
+
+		$scope.blurTodo = function (todo) {
+			if (todo !== $scope.editedTodo) {
+				return;
+			}
+			$scope.saveEdits(todo);
 		};
 
 		$scope.toggleCompleted = function (todo, completed) {
@@ -123,6 +130,14 @@ angular.module('todomvc')
 
 		$scope.clearCompletedTodos = function () {
 			store.clearCompleted();
+		};
+
+		$scope.mustFocus = function (todo) {
+			var val = todo === $scope.focusTodo && (
+				!document.activeElement ||
+				document.activeElement.nodeName === 'BODY' ||
+				angular.element(document.activeElement).hasClass('edit'));
+			return val;
 		};
 
 		$scope.markAll = function (completed) {

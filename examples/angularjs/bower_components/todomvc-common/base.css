@@ -61,15 +61,6 @@ input[type="checkbox"] {
 	height: 100%;
 }
 
-#todoapp input::-webkit-input-placeholder {
-	font-style: italic;
-}
-
-#todoapp input::-moz-placeholder {
-	font-style: italic;
-	color: #a9a9a9;
-}
-
 #todoapp h1 {
 	position: absolute;
 	top: -120px;
@@ -85,6 +76,30 @@ input[type="checkbox"] {
 	-ms-text-rendering: optimizeLegibility;
 	-o-text-rendering: optimizeLegibility;
 	text-rendering: optimizeLegibility;
+}
+
+#todo-form {
+	position:relative;
+}
+
+#todo-form label {
+	position:absolute;
+	top: 24px;
+	left: 60px;
+	width: 100%;
+	font-size:20px;
+	opacity: 0.8;
+}
+
+#todo-form input:focus + label,
+#todo-form input:valid + label {
+	top: 0;
+	left: 60px;
+	width: 100%;
+	transition: 0.2s;
+	bottom: 100%;
+	margin-bottom: -16px;
+	font-size:10px;
 }
 
 #header {
@@ -329,9 +344,9 @@ label[for='toggle-all'] {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	position: absolute;
 	right: 0;
 	left: 0;
+	display:inline;
 }
 
 #filters li {
@@ -344,7 +359,7 @@ label[for='toggle-all'] {
 	text-decoration: none;
 }
 
-#filters li a.selected {
+#filters li a.selected, #filterheading {
 	font-weight: bold;
 }
 
@@ -535,6 +550,15 @@ hr {
 	transition-property: left;
 	-webkit-transition-duration: 500ms;
 	transition-duration: 500ms;
+}
+
+.visuallyhidden {
+	position: absolute !important;
+	height: 1px; width: 1px; 
+	overflow: hidden;
+	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: polygon(0px 0px, 0px 0px,0px 0px, 0px 0px);
 }
 
 @media (min-width: 899px) {
